@@ -1,0 +1,10 @@
+name: DeathResurrection
+version: ${project.version}
+main: com.iceprosurface.deathresurrection.DeathResurrection
+api-version: 1.13
+authors: [icepro]
+description: Make player as a spectator when died
+commands:
+  dr:
+    description: resurrect or exile a player
+    usage: /dr {resurrect/exile}
