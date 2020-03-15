@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public final class DeathResurrection extends JavaPlugin {
     private static DeathResurrection instance;
-    private Config config;
+    public Config config;
 
     @Override
     public void onEnable() {
@@ -47,10 +47,6 @@ public final class DeathResurrection extends JavaPlugin {
         FileConfiguration cfg = config.getConfig();
         int hpCost = cfg.getInt("ResurrectionCosts.Hp");
         boolean enchantItemInHand = cfg.getBoolean("ResurrectionCosts.EnchantItemsInHand");
-        ConfigurationSection sec = cfg.getConfigurationSection("ResurrectionCosts.ResourceList");
-        Map<String, Object> obj = sec.getValues(false);
-        HashMap<String, Integer> resourceList = new HashMap<>();
-        obj.forEach((s, i) -> resourceList.put(s, Integer.parseInt(i.toString())));
         double health = from.getHealth();
         if (health < hpCost) {
             String NotEnoughHp = config.getConfig().getString("NotEnoughHp");
@@ -77,7 +73,7 @@ public final class DeathResurrection extends JavaPlugin {
             }
         }
         HashMap<Material, Integer> invMap = mapInventory(inv);
-        HashMap<Material, Integer>  needResources = convertResourceList(resourceList);
+        HashMap<Material, Integer>  needResources = config.getNeedResource();
         if (!isOblationEnough(invMap, needResources, from)) {
             from.sendMessage(ChatColor.RED + config.getConfig().getString("NotEnough"));
             return false;
@@ -130,16 +126,7 @@ public final class DeathResurrection extends JavaPlugin {
         });
         return flag.get();
     }
-    public static HashMap<Material, Integer> convertResourceList (HashMap<String, Integer> map) {
-        HashMap<Material, Integer> total = new HashMap<>();
-        map.forEach((s, i) -> {
-            Material m = Material.getMaterial(s);
-            if (m != null) {
-                total.put(m, i);
-            }
-        });
-        return total;
-    }
+
 
     public static void removeItems(Inventory inventory, HashMap<Material, Integer> needResource) {
         int size = inventory.getSize();

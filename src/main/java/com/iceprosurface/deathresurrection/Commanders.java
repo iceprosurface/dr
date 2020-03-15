@@ -20,43 +20,45 @@ import java.util.List;
 public class Commanders implements TabCompleter, CommandExecutor {
     private static final String RESURRECT = "resurrect";
     private static final String EXILE = "exile";
-    private static final String[] COMMANDS = {RESURRECT, EXILE};
+    private static final String CONFIG = "config";
+    private static final String[] COMMANDS = {RESURRECT, EXILE, CONFIG};
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         DeathResurrection instance = DeathResurrection.getInstance();
         Server server = instance.getServer();
         FileConfiguration config = instance.getConfig();
         if (!(sender instanceof Player)) {
-            return false;
+            return true;
         }
         Player from = (Player) sender;
         if (args.length <= 1) {
             sender.sendMessage(ChatColor.RED + config.getString("MustHaveTarget"));
-            return false;
+            return true;
         }
         Player targetPlayer = server.getPlayer(args[1]);
         switch (args[0]) {
             case RESURRECT:
+                assert targetPlayer != null;
                 Block feet = targetPlayer.getLocation().getBlock();
                 Block ground = feet.getRelative(BlockFace.DOWN);
                 if (!ground.getType().isSolid()) {
                     sender.sendMessage(ChatColor.RED + config.getString("NotSafe"));
-                    return false;
+                    return true;
                 }
                 if (!from.isOp() && instance.isPlayerBaned(from)) {
                     sender.sendMessage(ChatColor.RED + config.getString("ResurrectSelf"));
-                    return false;
+                    return true;
                 }
                 if (!instance.isPlayerBaned(targetPlayer.getUniqueId())) {
                     sender.sendMessage(ChatColor.RED +
                             config.getString("AlreadyExiled")
                                     .replace("%player%", targetPlayer.getDisplayName())
                     );
-                    return false;
+                    return true;
                 }
                 boolean isSuccess = instance.payCostOfResurrection(from);
                 if (!isSuccess) {
-                    return false;
+                    return true;
                 }
                 instance.unbanPlayer(targetPlayer);
                 sender.sendMessage(ChatColor.GREEN +
@@ -64,7 +66,7 @@ public class Commanders implements TabCompleter, CommandExecutor {
                                 .replace("%player%", targetPlayer.getDisplayName())
                                 .replace("%from%", from.getDisplayName())
                 );
-                break;
+                return true;
             case EXILE:
                 if (from.isOp()) {
                     instance.banPlayer(targetPlayer);
@@ -75,10 +77,16 @@ public class Commanders implements TabCompleter, CommandExecutor {
                 } else {
                     sender.sendMessage(ChatColor.RED + config.getString("OpOnly"));
                 }
-                break;
+                return true;
+            case CONFIG:
+                if (args[1].equals("reload")) {
+                    from.sendMessage(ChatColor.GREEN + "finish reload");
+                    instance.config.reload();
+                }
+                return true;
             default:
         }
-        return true;
+        return false;
     }
 
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
@@ -89,11 +97,14 @@ public class Commanders implements TabCompleter, CommandExecutor {
             StringUtil.copyPartialMatches(args[0], Arrays.asList(COMMANDS), completions);
         } else if (args.length == 2) {
             List<String> players = new ArrayList<>();
-            server.getOnlinePlayers().forEach((player -> players.add(player.getDisplayName())));
-            StringUtil.copyPartialMatches(args[1], players, completions);
+            if (CONFIG.equals(args[0])) {
+                completions.add("reload");
+            } else {
+                server.getOnlinePlayers().forEach((player -> players.add(player.getDisplayName())));
+                StringUtil.copyPartialMatches(args[1], players, completions);
+            }
         }
         Collections.sort(completions);
-
         return completions;
     }
 

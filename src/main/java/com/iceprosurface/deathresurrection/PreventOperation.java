@@ -12,9 +12,16 @@ import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import java.util.List;
+
 public class PreventOperation implements Listener {
 
     public boolean checkPermissions (Player player, Cancellable event) {
+        DeathResurrection instance = DeathResurrection.getInstance();
+        List<String> worlds = instance.config.getConfig().getStringList("worlds");
+        if (worlds == null || (!worlds.contains(player.getWorld().getName()))) {
+            return false;
+        }
         if (DeathResurrection.getInstance().isPlayerBaned(player.getUniqueId())) {
             event.setCancelled(true);
             return false;

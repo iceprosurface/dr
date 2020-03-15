@@ -9,6 +9,11 @@ ResurrectionCosts:
   ResourceList:
     AIR: 0
 
+worlds:
+  - "world"
+  - "world_nether"
+  - "world_the_end"
+
 # 复活 cd
 # ResurrectionCoolDown: -1
 
