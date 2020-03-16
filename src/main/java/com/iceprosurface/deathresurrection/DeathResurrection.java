@@ -1,7 +1,9 @@
 package com.iceprosurface.deathresurrection;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -12,6 +14,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -42,7 +45,27 @@ public final class DeathResurrection extends JavaPlugin {
     public static DeathResurrection getInstance(){
         return instance;
     }
-
+    public boolean resurrectPlayer(Player target) {
+        unbanPlayer(target);
+        List<Integer> respawnPoint = instance.config.getConfig().getIntegerList("RespawnPoint");
+        String respawnWorld = instance.config.getConfig().getString("RespawnWorld");
+        if (respawnWorld == null) {
+            return false;
+        }
+        World world = instance.getServer().getWorld(respawnWorld);
+        Location respawn = new Location(
+                world,
+                respawnPoint.get(0).doubleValue(),
+                respawnPoint.get(1).doubleValue(),
+                respawnPoint.get(2).doubleValue()
+        );
+        if (world == null) {
+            return false;
+        }
+        target.teleport(respawn);
+        world.strikeLightningEffect(respawn);
+        return true;
+    }
     public boolean payCostOfResurrection (Player from) {
         FileConfiguration cfg = config.getConfig();
         int hpCost = cfg.getInt("ResurrectionCosts.Hp");
@@ -59,7 +82,7 @@ public final class DeathResurrection extends JavaPlugin {
         ItemStack handItem = inv.getItemInMainHand();
         if (enchantItemInHand) {
             if (handItem.getMaxStackSize() != 1) {
-                //"你必须使用正确的附魔装备来复活队友"
+                 //"你必须使用正确的附魔装备来复活队友"
                 from.sendMessage(ChatColor.RED + config.getConfig().getString("NoEnchantItem"));
                 return false;
             }

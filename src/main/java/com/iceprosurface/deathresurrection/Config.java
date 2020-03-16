@@ -66,7 +66,7 @@ public class Config {
     }
     public void setConfig() {
         try {
-            configList.get(CONFIG).save(configFileList.get(CONFIG));
+            configList.get(CONFIG).save(CONFIG);
         } catch (IOException e) {
             e.printStackTrace();
         }

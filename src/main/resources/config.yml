@@ -14,6 +14,13 @@ worlds:
   - "world_nether"
   - "world_the_end"
 
+RespawnPoint:
+  - 0
+  - 0
+  - 0
+
+RespawnWorld: "world"
+
 # 复活 cd
 # ResurrectionCoolDown: -1
 
@@ -29,4 +36,5 @@ SuccessResurrect: "%player%已经被%from%成功复活"
 OpOnly: "只有 op 能这么做"
 SuccessExiled: "玩家%player%已经被成功放逐"
 NotSafe: "目标所在方块不安全"
+ResurrectOtherInExiled: "你不能在放逐状态下复活别人"
 
