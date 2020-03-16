@@ -7,4 +7,6 @@ description: Make player as a spectator when died
 commands:
   dr:
     description: resurrect or exile a player
-    usage: /dr {resurrect/exile}
+    usage: /dr
+
+softdepend: [PlaceholderAPI]
