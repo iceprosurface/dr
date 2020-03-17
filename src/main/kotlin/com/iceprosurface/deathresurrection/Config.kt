@@ -25,7 +25,12 @@ class Config {
     }
 
     fun reload() {
-        loadConfig()
+        for (configFile in configFileList) {
+            val key = configFile.key
+            val file = configFile.value
+            val fileConfig = configList[key] ?: continue
+            fileConfig.load(file)
+        }
     }
 
     val banListConfig: FileConfiguration?
@@ -42,9 +47,9 @@ class Config {
     val config: FileConfiguration?
         get() = configList[CONFIG]
 
-    fun setConfig() {
+    fun setConfig(cfg: String = CONFIG) {
         try {
-            configList[CONFIG]!!.save(CONFIG)
+            configList[cfg]!!.save(configFileList[cfg] ?: return)
         } catch (e: IOException) {
             e.printStackTrace()
         }

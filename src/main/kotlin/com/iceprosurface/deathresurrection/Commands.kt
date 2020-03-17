@@ -92,12 +92,13 @@ class Commanders : TabCompleter, CommandExecutor {
             }
             RESPAWN -> {
                 if (sender.isOp) {
+                    val cfg = instance.config.config
                     val nowWorld = sender.world
                     val worldName = nowWorld.name
                     val location = sender.location
                     val respawn = intArrayOf(location.blockX, location.blockY, location.blockZ)
-                    instance.config.config!!["RespawnPoint"] = respawn
-                    instance.config.config!!["RespawnWorld"] = worldName
+                    cfg?.set("RespawnPoint", respawn)
+                    cfg?.set("RespawnWorld", worldName)
                     instance.config.setConfig()
                 } else {
                     sender.sendMessage(ChatColor.RED.toString() + config!!.getString("OpOnly"))
@@ -110,6 +111,7 @@ class Commanders : TabCompleter, CommandExecutor {
                 } else {
                     sender.sendMessage(ChatColor.GREEN.toString() + config!!.getString("Normal"))
                 }
+                return true
             }
             else -> {
             }
@@ -125,11 +127,14 @@ class Commanders : TabCompleter, CommandExecutor {
             StringUtil.copyPartialMatches(args[0], listOf(*COMMANDS), completions)
         } else if (args.size == 2) {
             val players: MutableList<String> = ArrayList()
-            if (CONFIG == args[0]) {
-                completions.add("reload")
-            } else {
-                server.onlinePlayers.forEach { player: Player -> players.add(player.displayName) }
-                StringUtil.copyPartialMatches(args[1], players, completions)
+            when(args[0]) {
+                CONFIG -> {
+                    completions.add("reload")
+                }
+                else -> {
+                    server.onlinePlayers.forEach { player: Player -> players.add(player.displayName) }
+                    StringUtil.copyPartialMatches(args[1], players, completions)
+                }
             }
         }
         completions.sort()
@@ -142,6 +147,12 @@ class Commanders : TabCompleter, CommandExecutor {
         private const val CONFIG = "config"
         private const val RESPAWN = "respawn"
         private const val INFO = "info"
-        private val COMMANDS = arrayOf(RESURRECT, EXILE, CONFIG, RESPAWN)
+        val COMMANDS = arrayOf(
+            RESURRECT,
+            EXILE,
+            CONFIG,
+            RESPAWN,
+            INFO
+        )
     }
 }

@@ -21,9 +21,6 @@ RespawnPoint:
 
 RespawnWorld: "world"
 
-# 复活 cd
-# ResurrectionCoolDown: -1
-
 ResurrectSelf: "你不能尝试复活你自己!"
 NotEnough: "你必须有足够的祭品"
 NotEnoughDetail: "你缺少%count%个%name%"
@@ -39,3 +36,5 @@ NotSafe: "目标所在方块不安全"
 ResurrectOtherInExiled: "你不能在放逐状态下复活别人"
 Exiled: "你已经被放逐"
 Normal: "你处于正常状态"
+FirstDeath: "%name%已经在极限模式中死亡，现在将其切换为英灵模式"
+ExiledDeath: "英灵%name%再一次阵亡了"

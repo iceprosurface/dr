@@ -14,10 +14,17 @@ class DeadListener : Listener {
         val player = playerDeathEvent.entity
         val instance: DeathResurrection = DeathResurrection.instance
         if (!instance.isPlayerBaned(player)) {
-            player.server.broadcastMessage(ChatColor.YELLOW.toString() + player.displayName + "已经在极限模式中死亡，现在将其切换为英灵模式")
+            val firstDeathStr = instance.config.config?.getString("FirstDeath") ?: return
+            player.server.broadcastMessage(
+                ChatColor.YELLOW.toString() +
+                firstDeathStr.replace("%name%", player.displayName)
+            )
             playThunder(player)
         } else {
-            player.server.broadcastMessage("英灵" + player.displayName + "再一次阵亡了")
+            val exiledDeath = instance.config.config?.getString("ExiledDeath") ?: return
+            player.server.broadcastMessage(
+                exiledDeath.replace("%name%", player.displayName)
+            )
         }
         DeathResurrection.instance.banPlayer(player)
     }

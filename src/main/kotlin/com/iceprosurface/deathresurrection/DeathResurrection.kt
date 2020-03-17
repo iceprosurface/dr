@@ -29,7 +29,6 @@ class DeathResurrection : JavaPlugin() {
         // Plugin shutdown logic
         println("DeathResurrection was off")
     }
-
     fun resurrectPlayer(target: Player): Boolean {
         unbanPlayer(target)
         val cfg = config.config ?: return false
@@ -113,6 +112,7 @@ class DeathResurrection : JavaPlugin() {
 
     private fun unbanPlayer(playerUUid: UUID) {
         config.banListConfig?.set("list.$playerUUid", null)
+        config.setConfig(Config.BAN_LIST)
     }
 
     private fun unbanPlayer(player: Player) {

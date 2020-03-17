@@ -80,3 +80,10 @@ dr respawn
 ## 关于 ci 和 release
 
 暂未实现，请稍等
+
+## 计划实现
+
+- [ ] ci
+- [ ] 权限
+- [ ] 对接 placeholder api
+- [ ] 指定祭品的附魔类型
