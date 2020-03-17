@@ -104,6 +104,13 @@ class Commanders : TabCompleter, CommandExecutor {
                 }
                 return true
             }
+            INFO -> {
+                if (instance.isPlayerBaned(sender)) {
+                    sender.sendMessage(ChatColor.RED.toString() + config!!.getString("Exiled"))
+                } else {
+                    sender.sendMessage(ChatColor.GREEN.toString() + config!!.getString("Normal"))
+                }
+            }
             else -> {
             }
         }
@@ -134,6 +141,7 @@ class Commanders : TabCompleter, CommandExecutor {
         private const val EXILE = "exile"
         private const val CONFIG = "config"
         private const val RESPAWN = "respawn"
+        private const val INFO = "info"
         private val COMMANDS = arrayOf(RESURRECT, EXILE, CONFIG, RESPAWN)
     }
 }

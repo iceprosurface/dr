@@ -37,4 +37,5 @@ OpOnly: "只有 op 能这么做"
 SuccessExiled: "玩家%player%已经被成功放逐"
 NotSafe: "目标所在方块不安全"
 ResurrectOtherInExiled: "你不能在放逐状态下复活别人"
-
+Exiled: "你已经被放逐"
+Normal: "你处于正常状态"
