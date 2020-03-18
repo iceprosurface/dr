@@ -3,6 +3,7 @@ package com.iceprosurface.deathresurrection
 import org.bukkit.Bukkit
 import org.bukkit.permissions.Permission
 
+// TODO: 权限系统
 class Perm {
     constructor() {
         val pm = Bukkit.getPluginManager()

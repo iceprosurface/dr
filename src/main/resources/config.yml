@@ -4,6 +4,8 @@ ResurrectionCosts:
   Hp: 0
   # 是否需要在手中放置一件附魔物品作为祭品
   EnchantItemsInHand: false
+  EnchantList:
+    ARROW_DAMAGE: 1
   # 复活需要的资源列表
   # <item.id>: <int>
   ResourceList:
@@ -38,3 +40,4 @@ Exiled: "你已经被放逐"
 Normal: "你处于正常状态"
 FirstDeath: "%name%已经在极限模式中死亡，现在将其切换为英灵模式"
 ExiledDeath: "英灵%name%再一次阵亡了"
+NoCorrectEnchantItem: "你没有正确的附魔装备"

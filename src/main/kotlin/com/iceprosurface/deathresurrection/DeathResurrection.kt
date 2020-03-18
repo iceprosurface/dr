@@ -14,9 +14,11 @@ import kotlin.collections.HashMap
 
 class DeathResurrection : JavaPlugin() {
     lateinit var config: Config
+    lateinit var enchant: Enchant
     override fun onEnable() {
         instance = this
         config = Config()
+        enchant = Enchant()
         // Plugin startup logic
         println("DeathResurrection was run")
         server.pluginManager.registerEvents(DeadListener(), this)
@@ -72,6 +74,11 @@ class DeathResurrection : JavaPlugin() {
             val enchants = handItem.enchantments
             val totalLevel = AtomicInteger()
             enchants.forEach { (_, level) -> totalLevel.addAndGet(level ?: 0) }
+
+            if (!enchant.checkEnchant(enchants)) {
+                from.sendMessage(ChatColor.RED.toString() + (cfg.getString("NoCorrectEnchantItem")))
+                return false
+            }
             if (totalLevel.get() == 0) {
                 from.sendMessage(ChatColor.RED.toString() + (cfg.getString("NoEnchantItem")))
                 return false
